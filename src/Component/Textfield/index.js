@@ -33,8 +33,8 @@ class TextFileReader extends React.Component {
 		return (
 			<div>
 				{this.state.text.split("\n").map((item, key) => {
-          console.log("a")
-					return <span key={key}>{item}<br /></span>;
+					console.log("a",key, item)
+					
 				})}
 			</div>
 		);

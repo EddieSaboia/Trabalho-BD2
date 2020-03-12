@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Tupla from '../Estruturas/Tupla'
+import Tabela from '../Estruturas/Tabela'
 
 
 const Pages = () => {
   return (
   <> 
-  <Tupla></Tupla>
+  <Tabela>
+    
+  </Tabela>
   </>
   ) 
 }
