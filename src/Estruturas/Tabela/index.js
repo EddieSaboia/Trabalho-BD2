@@ -4,7 +4,7 @@ import Table from "../../Component/Table"
 const Tabela = () => {
   
   const [state, setState] = useState({
-    tupla: []
+    buckets: []
   })
 
   const columns = [
@@ -24,7 +24,6 @@ const Tabela = () => {
       minWidth: 150
     }
   ]
-
 
   return (
     <>
