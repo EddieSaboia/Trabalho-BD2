@@ -18,6 +18,8 @@ const Tabela = () => {
     overflowTax: "",
     colisaoTax: "",
     resultBusca: "",
+    qtdTuplasPagina: "",
+    qtdPaginas: ""
   });
 
   async function makeRequest(values) {
@@ -36,6 +38,8 @@ const Tabela = () => {
       buckets: data.tabela,
       overflowTax: data.overflowTax + "%",
       colisaoTax: data.colisaoTax + "%",
+      qtdTuplasPagina: data.qtdTuplasPagina,
+      qtdPaginas: data.qtdPaginas,
     });
     console.log("response", data);
   }
@@ -160,6 +164,10 @@ const Tabela = () => {
       <p>Taxa de Overflow : {state.overflowTax} </p>
 
       <p>Taxa de colisão : {state.colisaoTax} </p>
+
+      <p>Numero de Tuplas por página : {state.qtdTuplasPagina} </p>
+
+      <p>Numero de páginas : {state.qtdPaginas} </p>
 
       <p>Palavra buscada é : {state.resultBusca} </p>
 
