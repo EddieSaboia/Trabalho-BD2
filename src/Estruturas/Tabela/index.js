@@ -51,29 +51,29 @@ const Tabela = () => {
   const columns = [
     {
       id: "index",
-      label: "endereço Bucket",
+      label: "Endereço do Bucket",
       minWidth: 150,
     },
     {
       id: "paginaId",
-      label: "Pagina index",
+      label: "Index da Página",
       minWidth: 150,
     },
     {
       id: "palavraId",
-      label: "Palavra index",
+      label: "Index da Palavra",
       minWidth: 150,
     },
     {
       id: "element",
-      label: "Palavras",
+      label: "Palavras", 
       minWidth: 150,
     },
     {
       id: "overflow",
-      label: "overflow",
+      label: "Overflow",
       minWidth: 150
-    },
+    }
   ];
 
   const onFinish = (values) => {
