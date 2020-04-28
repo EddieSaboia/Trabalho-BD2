@@ -23,7 +23,9 @@ const Tabela = () => {
     resultBusca: "",
     qtdTuplasPagina: "",
     qtdPaginas: "",
-    open: false
+    open: false,
+    acessoDisco: 0,
+    acessoDiscoReal: 0
   });
 
   async function makeRequest(values) {
@@ -45,7 +47,6 @@ const Tabela = () => {
       qtdTuplasPagina: data.qtdTuplasPagina,
       qtdPaginas: data.qtdPaginas,
     });
-    console.log("response", data);
   }
 
   const columns = [
@@ -78,14 +79,16 @@ const Tabela = () => {
 
   const onFinish = (values) => {
     makeRequest(values);
-    console.log("Success:", values);
   };
 
   const busca = (value) => {
+    let acessoDisco = 0;
     state.buckets.forEach((bucket) => {
       for (let i = 0; i < bucket.palavraId.length; i++) {
+        acessoDisco++;
         const element = bucket.palavraId[i];
         if (value.palavra == element) {
+          // acessoDiscoReal = acessoDisco
           const bucketMontado = {
             index: bucket.index,
             paginaId: bucket.paginaId[i],
@@ -96,12 +99,14 @@ const Tabela = () => {
           setState({
             ...state,
             open: true,
+            acessoDiscoReal:acessoDisco,
             resultBusca: bucketMontado,
           });
         }
       }
 
       for (let i = 0; i < bucket.overflow.length; i++) {
+        acessoDisco++;
         const buckettt = bucket.overflow[i];
         if (buckettt.palavraId[0] == value.palavra) {
           const bucketMontado = {
@@ -114,6 +119,7 @@ const Tabela = () => {
           setState({
             ...state,
             open: true,
+            acessoDiscoReal:acessoDisco,
             resultBusca: bucketMontado,
           });
         }
@@ -191,6 +197,8 @@ const Tabela = () => {
             <Exibicao>Número de tuplas por página : {state.qtdTuplasPagina} </Exibicao>
 
             <Exibicao>Número de páginas : {state.qtdPaginas} </Exibicao>
+
+            <Exibicao>Acesso em disco pela Busca: {state.acessoDiscoReal} </Exibicao>
 
           </TabelaDados>
         </div>
