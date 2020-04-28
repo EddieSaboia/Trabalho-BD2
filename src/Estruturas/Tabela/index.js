@@ -64,11 +64,7 @@ const Tabela = () => {
     {
       id: "overflow",
       label: "overflow",
-      minWidth: 150,
-      render: (rowData) => {
-        
-        // <p>{rowData.index}</p>
-      },
+      minWidth: 150
     },
   ];
 
@@ -93,7 +89,7 @@ const Tabela = () => {
       for (let i = 0; i < bucket.palavraId.length; i++) {
         const element = bucket.palavraId[i];
         if (value.palavra == element) {
-          console.log(element);
+          // console.log(element);
           setState({
             ...state,
             resultBusca: bucket.element[i],
@@ -102,9 +98,9 @@ const Tabela = () => {
       }
       for (let i = 0; i < bucket.overflow.length; i++) {
         const buckettt = bucket.overflow[i];
-        console.log(buckettt.palavraId[0])
+        // console.log(buckettt.palavraId[0])
         if (buckettt.palavraId[0] == value.palavra) {
-          console.log(buckettt.element[0])
+          // console.log(buckettt.element[0])
           setState({
             ...state,
             resultBusca: buckettt.element[0],

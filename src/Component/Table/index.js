@@ -29,6 +29,17 @@ const TableCuston = ({ columns, data, ...props }) => {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   {columns.map(column => {
                     const value = row[column.id];
+                    if(column.id === "overflow"){
+                      let label = ""
+                      // console.log(value)
+                      if(value.length > 0)
+                        value.forEach(bucket => {
+                          console.log(bucket.element[0])
+              
+                            label = label + bucket.element[0] + "," 
+                        });
+                        return( <p>{label}</p> )
+                    }
                     return (
                       <TableCell key={column.id} align={column.align}>
                          {column.render
