@@ -32,10 +32,10 @@ const TableCuston = ({ columns, data, ...props }) => {
                     return (
                       <TableCell key={column.id} align={column.align}>
                          {column.render
-                          ? column.render(row)
-                          : column.format && typeof value === "number"
-                          ? column.format(value)
-                          : value}
+                          ? column.render(row) + "/"
+                          : column.format && typeof value === "number" + "/"
+                          ? column.format(value) + "/"
+                          : value + "/"}
                       </TableCell>
                     );
                   })}
