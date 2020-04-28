@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import Table from "../../Component/Table";
 import axios from "axios";
 import { Form, Input, Button, Checkbox } from "antd";
+import { TabelaDados, Exibicao, Forms, InputWrapper, ButtonWrapper, Buttons } from "./styles"
 import { FormInstance } from "antd/lib/form";
+import { Wrapper } from "../../Component/styles";
+import ShowInfo from "../../Component/ShowInfo";
 
 const layout = {
   labelCol: { span: 8 },
@@ -19,7 +22,8 @@ const Tabela = () => {
     colisaoTax: "",
     resultBusca: "",
     qtdTuplasPagina: "",
-    qtdPaginas: ""
+    qtdPaginas: "",
+    open: false
   });
 
   async function makeRequest(values) {
@@ -77,37 +81,40 @@ const Tabela = () => {
     console.log("Success:", values);
   };
 
-  // constructor(index, tamanho) {
-  //   this.tamanho = tamanho;
-  //   this.index = index;
-  //   this.paginaId = []
-  //   this.palavraId = []
-  //   this.element = []
-  //   this.overflow = []
-  //   this.taxacolisao = 0;
-  // }
-
   const busca = (value) => {
-    console.log(value.palavra);
     state.buckets.forEach((bucket) => {
       for (let i = 0; i < bucket.palavraId.length; i++) {
         const element = bucket.palavraId[i];
         if (value.palavra == element) {
-          // console.log(element);
+          const bucketMontado = {
+            index: bucket.index,
+            paginaId: bucket.paginaId[i],
+            palavraId: bucket.palavraId[i],
+            element: bucket.element[i],
+          };
+
           setState({
             ...state,
-            resultBusca: bucket.element[i],
+            open: true,
+            resultBusca: bucketMontado,
           });
         }
       }
+
       for (let i = 0; i < bucket.overflow.length; i++) {
         const buckettt = bucket.overflow[i];
-        // console.log(buckettt.palavraId[0])
         if (buckettt.palavraId[0] == value.palavra) {
-          // console.log(buckettt.element[0])
+          const bucketMontado = {
+            index: bucket.index,
+            paginaId: buckettt.paginaId[0],
+            palavraId: buckettt.palavraId[0],
+            element: buckettt.element[0],
+          };
+
           setState({
             ...state,
-            resultBusca: buckettt.element[0],
+            open: true,
+            resultBusca: bucketMontado,
           });
         }
       }
@@ -120,56 +127,77 @@ const Tabela = () => {
 
   return (
     <>
-      <h1>TABELA HASH</h1>
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-      >
-        <Form.Item label="Tamanho de Tuplas" name="numTuplas">
-          <Input />
-        </Form.Item>
+      <Wrapper>
+        <div>
+          <Forms
+            {...layout}
+            name="basic"
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+          >
+            <InputWrapper>
+              <Forms.Item label="Qtd de tuplas por página" name="numTuplas">
+                <Input />
+              </Forms.Item>
+            </InputWrapper>
 
-        <Form.Item label="tamanho da pagina" name="tamanhoPagina">
-          <Input />
-        </Form.Item>
+            <InputWrapper>
+              <Forms.Item label="Qtd de páginas" name="tamanhoPagina">
+                <Input />
+              </Forms.Item>
+            </InputWrapper>
 
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            Buscar
-          </Button>
-        </Form.Item>
-      </Form>
+            <ButtonWrapper>
+              <Forms.Item {...tailLayout}>
+                <Buttons type="primary" htmlType="submit">
+                  Processar Tabela
+          </Buttons>
+              </Forms.Item>
+            </ButtonWrapper>
 
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{ remember: true }}
-        onFinish={busca}
-        onFinishFailed={onFinishFailed}
-      >
-        <Form.Item label="Index da palavra" name="palavra">
-          <Input />
-        </Form.Item>
+          </Forms>
 
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+          <Forms
+            {...layout}
+            name="basic"
+            initialValues={{ remember: true }}
+            onFinish={busca}
+            onFinishFailed={onFinishFailed}
+          >
 
-      <p>Taxa de Overflow : {state.overflowTax} </p>
+            <InputWrapper>
+              <Form.Item label="Index da palavra" name="palavra">
+                <Input />
+              </Form.Item>
+            </InputWrapper>
 
-      <p>Taxa de colisão : {state.colisaoTax} </p>
+            <ButtonWrapper>
+              <Form.Item {...tailLayout}>
+                <Buttons type="primary" htmlType="submit">
+                  Procurar
+          </Buttons>
+              </Form.Item>
+            </ButtonWrapper>
 
-      <p>Numero de Tuplas por página : {state.qtdTuplasPagina} </p>
+          </Forms>
 
-      <p>Numero de páginas : {state.qtdPaginas} </p>
+          <TabelaDados>
 
-      <p>Palavra buscada é : {state.resultBusca} </p>
+            <Exibicao>Taxa de Overflow : {state.overflowTax} </Exibicao>
+
+            <Exibicao>Taxa de colisão : {state.colisaoTax} </Exibicao>
+
+            <Exibicao>Número de tuplas por página : {state.qtdTuplasPagina} </Exibicao>
+
+            <Exibicao>Número de páginas : {state.qtdPaginas} </Exibicao>
+
+          </TabelaDados>
+        </div>
+
+        <ShowInfo isVisible={state.open} bucket={state.resultBusca} />
+
+      </Wrapper>
 
       <Table columns={columns} data={state.buckets} />
     </>
