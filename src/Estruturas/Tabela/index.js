@@ -1,11 +1,26 @@
 import React, { useState } from "react";
+import ReactDOM from "react-dom";
 import Table from "../../Component/Table";
 import axios from "axios";
 import { Form, Input, Button, Checkbox } from "antd";
-import { TabelaDados, Exibicao, Forms, InputWrapper, ButtonWrapper, Buttons } from "./styles"
+
+import {
+  TabelaDados,
+  Exibicao,
+  Forms,
+  InputWrapper,
+  ButtonWrapper,
+  Buttons,
+  FormItem,
+  CardItem,
+} from "./styles";
 import { FormInstance } from "antd/lib/form";
 import { Wrapper } from "../../Component/styles";
 import ShowInfo from "../../Component/ShowInfo";
+// import CardItem from "../../Component/CardItem";
+import { Card } from "antd";
+
+import "antd/dist/antd.css";
 
 const layout = {
   labelCol: { span: 8 },
@@ -18,6 +33,7 @@ const tailLayout = {
 const Tabela = () => {
   const [state, setState] = useState({
     buckets: [],
+    pagina: [],
     overflowTax: "",
     colisaoTax: "",
     resultBusca: "",
@@ -42,6 +58,7 @@ const Tabela = () => {
     setState({
       ...state,
       buckets: data.tabela,
+      pagina: data.pagina,
       overflowTax: data.overflowTax + "%",
       colisaoTax: data.colisaoTax + "%",
       qtdTuplasPagina: data.qtdTuplasPagina,
@@ -67,14 +84,14 @@ const Tabela = () => {
     },
     {
       id: "element",
-      label: "Palavras", 
+      label: "Palavras",
       minWidth: 150,
     },
     {
       id: "overflow",
       label: "Overflow",
-      minWidth: 150
-    }
+      minWidth: 150,
+    },
   ];
 
   const onFinish = (values) => {
@@ -99,7 +116,7 @@ const Tabela = () => {
           setState({
             ...state,
             open: true,
-            acessoDiscoReal:acessoDisco,
+            acessoDiscoReal: acessoDisco,
             resultBusca: bucketMontado,
           });
         }
@@ -119,7 +136,7 @@ const Tabela = () => {
           setState({
             ...state,
             open: true,
-            acessoDiscoReal:acessoDisco,
+            acessoDiscoReal: acessoDisco,
             resultBusca: bucketMontado,
           });
         }
@@ -143,25 +160,28 @@ const Tabela = () => {
             onFinishFailed={onFinishFailed}
           >
             <InputWrapper>
-              <Forms.Item label="Qtd de tuplas por página" name="numTuplas">
+              <FormItem label="Qtd de tuplas por página" name="numTuplas">
                 <Input />
-              </Forms.Item>
+              </FormItem>
             </InputWrapper>
 
             <InputWrapper>
-              <Forms.Item label="Qtd de páginas" name="tamanhoPagina">
+              <FormItem label="Qtd de páginas" name="tamanhoPagina">
                 <Input />
-              </Forms.Item>
+              </FormItem>
             </InputWrapper>
 
             <ButtonWrapper>
-              <Forms.Item {...tailLayout}>
-                <Buttons type="primary" htmlType="submit">
+              <Form.Item {...tailLayout}>
+                <Buttons
+                  type="primary"
+                  htmlType="submit"
+                  style={{ height: 42 }}
+                >
                   Processar Tabela
-          </Buttons>
-              </Forms.Item>
+                </Buttons>
+              </Form.Item>
             </ButtonWrapper>
-
           </Forms>
 
           <Forms
@@ -171,7 +191,6 @@ const Tabela = () => {
             onFinish={busca}
             onFinishFailed={onFinishFailed}
           >
-
             <InputWrapper>
               <Form.Item label="Index da palavra" name="palavra">
                 <Input />
@@ -180,34 +199,55 @@ const Tabela = () => {
 
             <ButtonWrapper>
               <Form.Item {...tailLayout}>
-                <Buttons type="primary" htmlType="submit">
+                <Buttons
+                  type="primary"
+                  htmlType="submit"
+                  style={{ height: 42 }}
+                >
                   Procurar
-          </Buttons>
+                </Buttons>
               </Form.Item>
             </ButtonWrapper>
-
           </Forms>
 
           <TabelaDados>
-
             <Exibicao>Taxa de Overflow : {state.overflowTax} </Exibicao>
 
             <Exibicao>Taxa de colisão : {state.colisaoTax} </Exibicao>
 
-            <Exibicao>Número de tuplas por página : {state.qtdTuplasPagina} </Exibicao>
+            <Exibicao>
+              Número de tuplas por página : {state.qtdTuplasPagina}{" "}
+            </Exibicao>
 
             <Exibicao>Número de páginas : {state.qtdPaginas} </Exibicao>
 
-            <Exibicao>Acesso em disco pela Busca: {state.acessoDiscoReal} </Exibicao>
-
+            <Exibicao>
+              Acesso em disco pela Busca: {state.acessoDiscoReal}{" "}
+            </Exibicao>
           </TabelaDados>
         </div>
 
         <ShowInfo isVisible={state.open} bucket={state.resultBusca} />
-
       </Wrapper>
 
-      <Table columns={columns} data={state.buckets} />
+      <div style={{ padding: 24 }}>
+        {state.pagina.map((pagina) => {
+          let title = "Pagina " + pagina.id;
+          return (
+            <Card title={title}>
+              {pagina.tuplas.map((tupla) => (
+                <div style={{display: "inline-grid", marginRight: 5}}>
+                  <Card.Grid style={{width: 180}}>
+                    <p>Index da palavra: {tupla?.index}</p>
+                    <p>Palavra : {tupla?.element}</p>
+                  </Card.Grid>
+                  <Button>More</Button>
+                </div>
+              ))}
+            </Card>
+          );
+        })}
+      </div>
     </>
   );
 };
