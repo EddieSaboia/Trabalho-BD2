@@ -66,3 +66,19 @@ export const CardItem = styled(Card.Grid)`
 export const FormItem = styled(Forms.Item)`
   display: inline-flex;
 `;
+
+export const CardGrafico = styled.div`
+  background: #d2e5fc;
+  border-style: solid;
+  padding: 20px;
+  width: 80%;
+  margin-left: 10%;
+`;
+
+export const TitleGrafico = styled.p`
+  font-size: 33px;
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  margin-bottom: 5px;
+`;
