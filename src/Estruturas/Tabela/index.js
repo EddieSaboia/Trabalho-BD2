@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 // import Table from "../../Component/Table";
 import { Form, Input, Button, Checkbox, Table, Tag, Space } from "antd";
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 
 import {
   TabelaDados,
@@ -61,71 +63,10 @@ const Tabela = () => {
     variavelWhere: "",
     variavelSinal: "",
     variavelValorWhere: "",
-    arrayDataTableInter: [],
+    arrayDataTableInter: [],  
+    searchText: '',
+    searchedColumn: '',
   });
-
-  let columnsDepartamento = [
-    {
-      id: "id",
-      label: "Id",
-      minWidth: 150,
-    },
-    {
-      id: "nome",
-      label: "Nome",
-      minWidth: 150,
-    },
-    {
-      id: "codigodepartamento",
-      label: "Codigo departamento",
-      minWidth: 150,
-    },
-  ];
-
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-  ];
-
-  let columnsEmpregados = [
-    {
-      key: "matricula",
-      dataIndex: "matricula",
-      title: "Matricula",
-      minWidth: 150,
-    },
-    {
-      key: "nome",
-      dataIndex: "nome",
-      title: "Nome",
-      minWidth: 150,
-    },
-    {
-      key: "salario",
-      dataIndex: "salario",
-      title: "Salario",
-      minWidth: 150,
-    },
-    {
-      key: "lotacao",
-      dataIndex: "lotacao",
-      title: "Lotacâo",
-      minWidth: 150,
-    },
-  ];
 
   async function makeRequest(values, link) {
     const requestOptions = {
@@ -266,6 +207,7 @@ const Tabela = () => {
   };
 
   const interpretasor = (query) => {
+    
     const regex1 = /\s*select\s+([*])\s+from\s+(\w+)$/g;
     const regex2 = /\s*select\s+(\w+)\s+from\s+(\w+)\s*$/g;
     const regex3 = /\s*select\s+(\w+)\s*,\s*(\w+)\s+from\s+(\w+)\s*$/g;
@@ -581,20 +523,130 @@ const Tabela = () => {
       makeRequest(values, "receberdoisparametrowhere");
     }
   };
-  const asldgh = [
+  
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          // ref={node => {
+          //   searchInput = node;
+          // }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      // if (visible) {
+      //   setTimeout(() => searchInput.select());
+      // }
+    },
+    render: text =>
+      state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+ const handleReset = clearFilters => {
+    clearFilters();
+    setState({ searchText: '' });
+  };
+
+  let columnsDepartamento = [
     {
-      matricula: "1",
-      nome: "Mike",
-      salario: 32,
-      lotacao: "10 Downing Street",
+      key: "id",
+      dataIndex: "id",
+      title: "Id",
+      minWidth: 150,
+      ...getColumnSearchProps('id')
+
     },
     {
-      matricula: "1",
-      nome: "Mike",
-      salario: 32,
-      lotacao: "10 Downing Street",
+      key: "nome",
+      dataIndex: "nome",
+      title: "Nome",
+      minWidth: 150,
+      ...getColumnSearchProps('nome')
+
+    },
+    {
+      key: "codigodepartamento",
+      dataIndex: "codigodepartamento",
+      title: "Codigo departamento",
+      minWidth: 150,
+      ...getColumnSearchProps('codigodepartamento')
+
     },
   ];
+
+  let columnsEmpregados = [
+    {
+      key: "matricula",
+      dataIndex: "matricula",
+      title: "Matricula",
+      minWidth: 150,
+      ...getColumnSearchProps('matricula')
+    },
+    {
+      key: "nome",
+      dataIndex: "nome",
+      title: "Nome",
+      minWidth: 150,
+      ...getColumnSearchProps('nome')
+
+    },
+    {
+      key: "salario",
+      dataIndex: "salario",
+      title: "Salario",
+      minWidth: 150,
+      ...getColumnSearchProps('salario')
+
+    },
+    {
+      key: "lotacao",
+      dataIndex: "lotacao",
+      title: "Lotacâo",
+      minWidth: 150,
+      ...getColumnSearchProps('lotacao')
+    },
+  ];
+
 
   return (
     <>
