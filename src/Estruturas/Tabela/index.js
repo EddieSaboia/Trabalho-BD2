@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import Table from "../../Component/Table";
-import axios from "axios";
-import { Form, Input, Button, Checkbox, Tag, Space } from "antd";
+// import Table from "../../Component/Table";
+import { Form, Input, Button, Checkbox, Table, Tag, Space } from "antd";
 
 import {
   TabelaDados,
@@ -41,7 +40,9 @@ const Tabela = () => {
   let groups = "";
   let tamanho = 0;
   let arraynovo = [];
+  let arrayIntermediario = [];
   let arrayDataTable = [];
+  let arrayDataTableIntermediario = [];
 
   const [state, setState] = useState({
     numbTuplas: [],
@@ -56,6 +57,11 @@ const Tabela = () => {
     acessoDisco: 0,
     acessoDiscoReal: 0,
     nameTabela: "",
+    variaveis: "",
+    variavelWhere: "",
+    variavelSinal: "",
+    variavelValorWhere: "",
+    arrayDataTableInter: [],
   });
 
   let columnsDepartamento = [
@@ -76,25 +82,47 @@ const Tabela = () => {
     },
   ];
 
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+  ];
+
   let columnsEmpregados = [
     {
-      id: "matricula",
-      label: "Matricula",
+      key: "matricula",
+      dataIndex: "matricula",
+      title: "Matricula",
       minWidth: 150,
     },
     {
-      id: "nome",
-      label: "Nome",
+      key: "nome",
+      dataIndex: "nome",
+      title: "Nome",
       minWidth: 150,
     },
     {
-      id: "salario",
-      label: "Salario",
+      key: "salario",
+      dataIndex: "salario",
+      title: "Salario",
       minWidth: 150,
     },
     {
-      id: "lotacao",
-      label: "Lotacâo",
+      key: "lotacao",
+      dataIndex: "lotacao",
+      title: "Lotacâo",
       minWidth: 150,
     },
   ];
@@ -111,25 +139,59 @@ const Tabela = () => {
     );
     const data = await response.json();
 
-    data.numbTuplas.map((pagina) => {
+    if (data.tabelaIntermediaria) {
+      data.tabelaIntermediaria.map((pagina) => {
+        arrayIntermediario.push(pagina.linha);
+      });
+
+      for (let i = 0; i < arrayIntermediario.length; i++) {
+        if (groups === "empregados") {
+          arrayDataTableIntermediario.push({
+            matricula: arrayIntermediario[i]?.matricula
+              ? arrayIntermediario[i].matricula
+              : "-",
+            nome: arrayIntermediario[i]?.nome
+              ? arrayIntermediario[i].nome
+              : "-",
+            salario: arrayIntermediario[i]?.salario
+              ? arrayIntermediario[i].salario
+              : "-",
+            lotacao: arrayIntermediario[i]?.lotacao
+              ? arrayIntermediario[i].lotacao
+              : "-",
+          });
+        } else if (groups === "departamento") {
+          arrayDataTableIntermediario.push({
+            id: arrayIntermediario[i].id ? arrayIntermediario[i].id : "-",
+            nome: arrayIntermediario[i].nome ? arrayIntermediario[i].nome : "-",
+            codigodepartamento: arrayIntermediario[i].codigodepartamento
+              ? arrayIntermediario[i].codigodepartamento
+              : "-",
+          });
+        } else {
+        }
+      }
+    }
+
+    data.projecao.map((pagina) => {
       arraynovo.push(pagina.linha);
     });
 
     for (let i = 0; i < arraynovo.length; i++) {
       if (groups === "empregados") {
         arrayDataTable.push({
-          matricula: arraynovo[i]?.matricula ? arraynovo[i].matricula : "",
-          nome: arraynovo[i]?.nome ? arraynovo[i].nome : "",
-          salario: arraynovo[i]?.salario ? arraynovo[i].salario : "",
-          lotacao: arraynovo[i]?.lotacao ? arraynovo[i].lotacao : "",
+          matricula: arraynovo[i]?.matricula ? arraynovo[i].matricula : "-",
+          nome: arraynovo[i]?.nome ? arraynovo[i].nome : "-",
+          salario: arraynovo[i]?.salario ? arraynovo[i].salario : "-",
+          lotacao: arraynovo[i]?.lotacao ? arraynovo[i].lotacao : "-",
         });
       } else if (groups === "departamento") {
         arrayDataTable.push({
-          id: arraynovo[i].id ? arraynovo[i].id : "",
-          nome: arraynovo[i].nome ? arraynovo[i].nome : "",
+          id: arraynovo[i].id ? arraynovo[i].id : "-",
+          nome: arraynovo[i].nome ? arraynovo[i].nome : "-",
           codigodepartamento: arraynovo[i].codigodepartamento
             ? arraynovo[i].codigodepartamento
-            : "",
+            : "-",
         });
       } else {
       }
@@ -138,6 +200,8 @@ const Tabela = () => {
     setState({
       ...state,
       buckets: arrayDataTable,
+      pagina: data.paginas,
+      arrayDataTableInter: arrayDataTableIntermediario,
     });
 
     setVisable(true);
@@ -314,7 +378,7 @@ const Tabela = () => {
         makeRequest(values, "receberumparametro");
       }
     }
-    console.log("EDDIEEEE", variavel["length"]);
+
     if (variavel["length"] === 7) {
       if (variavel[4] !== "") {
         for (let index = 0; index < tamanho; index++) {
@@ -331,6 +395,14 @@ const Tabela = () => {
 
         variaveis = variavel[1];
 
+        setState({
+          ...state,
+          variaveis: variaveis,
+          variavelWhere: variavelWhere,
+          variavelSinal: variavelSinal,
+          variavelValorWhere: variavelValorWhere,
+        });
+
         setEle(tabeladatabase);
 
         setElements([
@@ -340,16 +412,16 @@ const Tabela = () => {
             position: { x: 250, y: 5 },
           },
           {
-            id: "3",
+            id: "2",
             data: { label: "projeção[" + variaveis + "]" },
             position: { x: 100, y: 100 },
           },
           {
-            id: "2",
+            id: "3",
             data: {
               label: "Where " + variavel[3] + " " + variavel[4] + variavel[6],
             },
-            position: { x: 100, y: 100 },
+            position: { x: 50, y: 50 },
           },
           { id: "e1-2", source: "1", target: "2", animated: true },
           { id: "e2-3", source: "2", target: "3", animated: true },
@@ -509,6 +581,20 @@ const Tabela = () => {
       makeRequest(values, "receberdoisparametrowhere");
     }
   };
+  const asldgh = [
+    {
+      matricula: "1",
+      nome: "Mike",
+      salario: 32,
+      lotacao: "10 Downing Street",
+    },
+    {
+      matricula: "1",
+      nome: "Mike",
+      salario: 32,
+      lotacao: "10 Downing Street",
+    },
+  ];
 
   return (
     <>
@@ -528,14 +614,16 @@ const Tabela = () => {
 
           <ButtonWrapper>
             <Form.Item {...tailLayout}>
-              <Buttons type="primary" htmlType="submit" style={{ height: 42, marginLeft: -160}} >
+              <Buttons
+                type="primary"
+                htmlType="submit"
+                style={{ height: 42, marginLeft: -160 }}
+              >
                 Processar
               </Buttons>
             </Form.Item>
           </ButtonWrapper>
         </Forms>
-
-        {/* <ShowInfo isVisible={state.open} bucket={state.resultBusca} /> */}
       </Wrapper>
 
       <hr />
@@ -546,11 +634,33 @@ const Tabela = () => {
       {visable && (
         <div style={{ padding: 24 }}>
           {console.log("pequena 5", ele)}
+          <p>{ele}</p>
+
           <Table
             columns={
               ele === "empregados" ? columnsEmpregados : columnsDepartamento
             }
-            data={state.buckets}
+            dataSource={state.pagina}
+          />
+
+          {state.arrayDataTableInter.length !== 0 && (
+            <div>
+              <p>Projeção Intermediaria </p>
+              <Table
+                columns={
+                  ele === "empregados" ? columnsEmpregados : columnsDepartamento
+                }
+                dataSource={state.arrayDataTableInter}
+              />
+            </div>
+          )}
+
+          <p>Projeção Final</p>
+          <Table
+            columns={
+              ele === "empregados" ? columnsEmpregados : columnsDepartamento
+            }
+            dataSource={state.buckets}
           />
         </div>
       )}
