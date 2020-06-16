@@ -33,7 +33,6 @@ const tailLayout = {
 };
 
 const Tabela = () => {
-
   const [elements, setElements] = useState([]);
   const [ele, setEle] = useState("AHHH");
 
@@ -56,24 +55,26 @@ const Tabela = () => {
     open: false,
     acessoDisco: 0,
     acessoDiscoReal: 0,
-    nameTabela: ""
+    nameTabela: "",
   });
 
-  let columnsDepartamento = [ {
-    id: "id",
-    label: "Id",
-    minWidth: 150,
-  },
-  {
-    id: "nome",
-    label: "Nome",
-    minWidth: 150,
-  },
-  {
-    id: "codigodepartamento",
-    label: "Codigo departamento",
-    minWidth: 150,
-  }];
+  let columnsDepartamento = [
+    {
+      id: "id",
+      label: "Id",
+      minWidth: 150,
+    },
+    {
+      id: "nome",
+      label: "Nome",
+      minWidth: 150,
+    },
+    {
+      id: "codigodepartamento",
+      label: "Codigo departamento",
+      minWidth: 150,
+    },
+  ];
 
   let columnsEmpregados = [
     {
@@ -109,12 +110,10 @@ const Tabela = () => {
       requestOptions
     );
     const data = await response.json();
-    console.log("pequena 1",data.numbTuplas)
 
     data.numbTuplas.map((pagina) => {
       arraynovo.push(pagina.linha);
     });
-    console.log("pequena 2",arraynovo)
 
     for (let i = 0; i < arraynovo.length; i++) {
       if (groups === "empregados") {
@@ -127,19 +126,19 @@ const Tabela = () => {
       } else if (groups === "departamento") {
         arrayDataTable.push({
           id: arraynovo[i].id ? arraynovo[i].id : "",
-          nome: arraynovo[i].nome? arraynovo[i].nome : "",
-          codigodepartamento: arraynovo[i].codigodepartamento ? arraynovo[i].codigodepartamento : ""
+          nome: arraynovo[i].nome ? arraynovo[i].nome : "",
+          codigodepartamento: arraynovo[i].codigodepartamento
+            ? arraynovo[i].codigodepartamento
+            : "",
         });
       } else {
       }
     }
 
-    console.log("pequena",arrayDataTable)
-
     setState({
       ...state,
-      buckets: arrayDataTable
-    })
+      buckets: arrayDataTable,
+    });
 
     setVisable(true);
   }
@@ -147,8 +146,6 @@ const Tabela = () => {
   useEffect(() => {
     console.log("variavel", state);
   }, [state]);
-
-
 
   const onFinish = (values) => {
     makeRequest(values);
@@ -250,16 +247,15 @@ const Tabela = () => {
       return d;
     }
 
-    // if ((a = regex1.exec(query)) != null) {
-    //   tamanho = 3;
-    //   return a;
-    // }
+    if ((e = regex5.exec(query)) != null) {
+      tamanho = 3;
+      return e;
+    }
 
-    // if ((b = regex2.exec(query)) != null) {
-    //   console.log("variavel BB", b);
-    //   tamanho = 3;
-    //   return b;
-    // }
+    if ((f = regex6.exec(query)) != null) {
+      tamanho = 3;
+      return f;
+    }
 
     return "Expressão invalida";
   };
@@ -274,19 +270,21 @@ const Tabela = () => {
     let variavel = interpretasor(values.numTuplas);
     let tabeladatabase = "";
     let variaveis = "";
-    console.log(variavel["length"]);
-    if (variavel["length"] === 3) {
+    let variavelWhere = "";
+    let variavelSinal = "";
+    let variavelValorWhere = "";
+    console.log("EDDIIIEEE", variavel["length"]);
+    if (variavel["length"] === 3 || variavel["length"] === 4) {
       for (let index = 0; index < tamanho; index++) {
         const element = variavel[index];
         if (
           element === "departamento" ||
           element === "dependente" ||
           element === "empregados"
-        ){
+        ) {
           tabeladatabase = element;
           groups = element;
         }
-      
       }
       if (tamanho === 4) {
         variaveis = variavel[1] + "," + variavel[2];
@@ -310,9 +308,169 @@ const Tabela = () => {
         { id: "e1-2", source: "1", target: "2", animated: true },
       ]);
 
-      makeRequest(values, "receberumparametro");
-
+      if (tamanho === 4) {
+        console.log("EDDIIIEEE", tamanho);
+        makeRequest(values, "receberdoisparametros");
+      } else {
+        makeRequest(values, "receberumparametro");
+      }
     }
+
+    if (variavel["length"] === 7) {
+      for (let index = 0; index < tamanho; index++) {
+        const element = variavel[index];
+        if (
+          element === "departamento" ||
+          element === "dependente" ||
+          element === "empregados"
+        ) {
+          tabeladatabase = element;
+          groups = element;
+        }
+      }
+
+      variaveis = variavel[1];
+      // 3: "salario"
+      // 4: "<"
+      // 5: ""
+      // 6: "5000
+      setEle(tabeladatabase);
+
+      setElements([
+        {
+          id: "1",
+          data: { label: "Paginas " + tabeladatabase },
+          position: { x: 250, y: 5 },
+        },
+        {
+          id: "3",
+          data: { label: "projeção[" + variaveis + "]" },
+          position: { x: 100, y: 100 },
+        },
+        {
+          id: "2",
+          data: {
+            label: "Where " + variavel[3] + " " + variavel[4] + variavel[6],
+          },
+          position: { x: 100, y: 100 },
+        },
+        { id: "e1-2", source: "1", target: "2", animated: true },
+        { id: "e2-3", source: "2", target: "3", animated: true },
+      ]);
+
+      makeRequest(values, "receberumparametrowhere");
+    }
+
+    if (variavel["length"] === 18) {
+      console.log("entrou 2", variavel);
+      if (
+        variavel[2] === "departamento" ||
+        variavel[2] === "dependente" ||
+        variavel[2] === "empregados"
+      ) {
+        console.log("entrou 1");
+        tabeladatabase = variavel[2];
+        groups = variavel[2];
+        variaveis = variavel[1];
+        variavelWhere = variavel[3];
+        variavelSinal = variavel[4];
+        variavelValorWhere = variavel[6];
+      } else {
+        console.log("entrou 2");
+        tabeladatabase = variavel[3];
+        groups = variavel[3];
+        variaveis = variavel[1] + "," + variavel[2];
+        variavelWhere = variavel[4];
+        variavelSinal = variavel[5];
+        variavelValorWhere = variavel[7];
+      }
+
+      setEle(tabeladatabase);
+
+      setElements([
+        {
+          id: "1",
+          data: { label: "Paginas " + tabeladatabase },
+          position: { x: 250, y: 5 },
+        },
+        {
+          id: "3",
+          data: { label: "projeção[" + variaveis + "]" },
+          position: { x: 100, y: 100 },
+        },
+        {
+          id: "2",
+          data: {
+            label: "Where " + variavel[3] + " " + variavel[4] + variavel[6],
+          },
+          position: { x: 100, y: 100 },
+        },
+        { id: "e1-2", source: "1", target: "2", animated: true },
+        { id: "e2-3", source: "2", target: "3", animated: true },
+      ]);
+
+      if (
+        variavel[2] === "departamento" ||
+        variavel[2] === "dependente" ||
+        variavel[2] === "empregados"
+      ) {
+        makeRequest(values, "receberumparametrowhere");
+      } else {
+        console.log("entrou 2");
+        makeRequest(values, "receberdoisparametrowhere");
+      }
+    }
+    if (variavel["length"] === 8) {
+      console.log("entrou 2", variavel);
+      if (
+        variavel[2] === "departamento" ||
+        variavel[2] === "dependente" ||
+        variavel[2] === "empregados"
+      ) {
+        console.log("entrou 1");
+        tabeladatabase = variavel[2];
+        groups = variavel[2];
+        variaveis = variavel[1];
+        variavelWhere = variavel[3];
+        variavelSinal = variavel[4];
+        variavelValorWhere = variavel[6];
+      } else {
+        console.log("entrou 2");
+        tabeladatabase = variavel[3];
+        groups = variavel[3];
+        variaveis = variavel[1] + "," + variavel[2];
+        variavelWhere = variavel[4];
+        variavelSinal = variavel[5];
+        variavelValorWhere = variavel[7];
+      }
+
+      setEle(tabeladatabase);
+
+      setElements([
+        {
+          id: "1",
+          data: { label: "Paginas " + tabeladatabase },
+          position: { x: 250, y: 5 },
+        },
+        {
+          id: "3",
+          data: { label: "projeção[" + variaveis + "]" },
+          position: { x: 100, y: 100 },
+        },
+        {
+          id: "2",
+          data: {
+            label: "Where " + variavel[3] + " " + variavel[4] + variavel[6],
+          },
+          position: { x: 100, y: 100 },
+        },
+        { id: "e1-2", source: "1", target: "2", animated: true },
+        { id: "e2-3", source: "2", target: "3", animated: true },
+      ]);
+
+      makeRequest(values, "receberdoisparametrowhere");
+    }
+
   };
 
   return (
@@ -358,7 +516,9 @@ const Tabela = () => {
         <div style={{ padding: 24 }}>
           {console.log("pequena 5", ele)}
           <Table
-            columns={ele === "empregados" ? columnsEmpregados : columnsDepartamento}
+            columns={
+              ele === "empregados" ? columnsEmpregados : columnsDepartamento
+            }
             data={state.buckets}
           />
         </div>
