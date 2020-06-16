@@ -314,89 +314,89 @@ const Tabela = () => {
         makeRequest(values, "receberumparametro");
       }
     }
-    console.log("EDDIEEEE", variavel["length"])
+    console.log("EDDIEEEE", variavel["length"]);
     if (variavel["length"] === 7) {
-     if(variavel[4] !== ""){
-      for (let index = 0; index < tamanho; index++) {
-        const element = variavel[index];
-        if (
-          element === "departamento" ||
-          element === "dependente" ||
-          element === "empregados"
-        ) {
-          tabeladatabase = element;
-          groups = element;
+      if (variavel[4] !== "") {
+        for (let index = 0; index < tamanho; index++) {
+          const element = variavel[index];
+          if (
+            element === "departamento" ||
+            element === "dependente" ||
+            element === "empregados"
+          ) {
+            tabeladatabase = element;
+            groups = element;
+          }
         }
-      }
 
-      variaveis = variavel[1];
+        variaveis = variavel[1];
 
-      setEle(tabeladatabase);
+        setEle(tabeladatabase);
 
-      setElements([
-        {
-          id: "1",
-          data: { label: "Paginas " + tabeladatabase },
-          position: { x: 250, y: 5 },
-        },
-        {
-          id: "3",
-          data: { label: "projeção[" + variaveis + "]" },
-          position: { x: 100, y: 100 },
-        },
-        {
-          id: "2",
-          data: {
-            label: "Where " + variavel[3] + " " + variavel[4] + variavel[6],
+        setElements([
+          {
+            id: "1",
+            data: { label: "Paginas " + tabeladatabase },
+            position: { x: 250, y: 5 },
           },
-          position: { x: 100, y: 100 },
-        },
-        { id: "e1-2", source: "1", target: "2", animated: true },
-        { id: "e2-3", source: "2", target: "3", animated: true },
-      ]);
+          {
+            id: "3",
+            data: { label: "projeção[" + variaveis + "]" },
+            position: { x: 100, y: 100 },
+          },
+          {
+            id: "2",
+            data: {
+              label: "Where " + variavel[3] + " " + variavel[4] + variavel[6],
+            },
+            position: { x: 100, y: 100 },
+          },
+          { id: "e1-2", source: "1", target: "2", animated: true },
+          { id: "e2-3", source: "2", target: "3", animated: true },
+        ]);
 
-      makeRequest(values, "receberumparametrowhere");
-     }else{
-      for (let index = 0; index < tamanho; index++) {
-        const element = variavel[index];
-        if (
-          element === "departamento" ||
-          element === "dependente" ||
-          element === "empregados"
-        ) {
-          tabeladatabase = element;
-          groups = element;
+        makeRequest(values, "receberumparametrowhere");
+      } else {
+        for (let index = 0; index < tamanho; index++) {
+          const element = variavel[index];
+          if (
+            element === "departamento" ||
+            element === "dependente" ||
+            element === "empregados"
+          ) {
+            tabeladatabase = element;
+            groups = element;
+          }
         }
-      }
 
-      variaveis = variavel[1];
+        variaveis = variavel[1];
 
-      setEle(tabeladatabase);
+        setEle(tabeladatabase);
 
-      setElements([
-        {
-          id: "1",
-          data: { label: "Paginas " + tabeladatabase },
-          position: { x: 250, y: 5 },
-        },
-        {
-          id: "3",
-          data: { label: "projeção[" + variaveis + "]" },
-          position: { x: 100, y: 100 },
-        },
-        {
-          id: "2",
-          data: {
-            label: "Where " + variavel[3] + " " + variavel[5] + variavel[6],
+        setElements([
+          {
+            id: "1",
+            data: { label: "Paginas " + tabeladatabase },
+            position: { x: 250, y: 5 },
           },
-          position: { x: 100, y: 100 },
-        },
-        { id: "e1-2", source: "1", target: "2", animated: true },
-        { id: "e2-3", source: "2", target: "3", animated: true },
-      ]);
+          {
+            id: "3",
+            data: { label: "projeção[" + variaveis + "]" },
+            position: { x: 100, y: 100 },
+          },
+          {
+            id: "2",
+            data: {
+              label: "Where " + variavel[3] + " " + variavel[5] + variavel[6],
+            },
+            position: { x: 100, y: 100 },
+          },
+          { id: "e1-2", source: "1", target: "2", animated: true },
+          { id: "e2-3", source: "2", target: "3", animated: true },
+        ]);
 
-      makeRequest(values, "receberumparametrobinario");
-     }
+        makeRequest(values, "receberumparametrobinario");
+      }
     }
 
     if (variavel["length"] === 18) {
@@ -513,33 +513,27 @@ const Tabela = () => {
   return (
     <>
       <Wrapper>
-        <div>
-          <Forms
-            {...layout}
-            name="basic"
-            initialValues={{ remember: true }}
-            onFinish={onsubmit}
-            onFinishFailed={onFinishFailed}
-          >
-            <InputWrapper>
-              <FormItem label="Querry" name="numTuplas">
-                <Input style={{width: 327}}/>
-              </FormItem>
-            </InputWrapper>
+        <Forms
+          {...layout}
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={onsubmit}
+          onFinishFailed={onFinishFailed}
+        >
+          <InputWrapper>
+            <FormItem label="Querry" name="numTuplas">
+              <Input style={{ width: 558 }} />
+            </FormItem>
+          </InputWrapper>
 
-            <ButtonWrapper>
-              <Form.Item {...tailLayout}>
-                <Buttons
-                  type="primary"
-                  htmlType="submit"
-                  style={{ height: 42 }}
-                >
-                  Processar
-                </Buttons>
-              </Form.Item>
-            </ButtonWrapper>
-          </Forms>
-        </div>
+          <ButtonWrapper>
+            <Form.Item {...tailLayout}>
+              <Buttons type="primary" htmlType="submit" style={{ height: 42, marginLeft: -160}} >
+                Processar
+              </Buttons>
+            </Form.Item>
+          </ButtonWrapper>
+        </Forms>
 
         {/* <ShowInfo isVisible={state.open} bucket={state.resultBusca} /> */}
       </Wrapper>

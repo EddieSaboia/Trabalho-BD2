@@ -17,7 +17,7 @@ export const TabelaDados = styled.div`
 `;
 
 export const Forms = styled(Form)`
-  width: 500px;
+  width: 100%;
   margin-top: 20px;
   margin-left: 20px;
   display: flex;
