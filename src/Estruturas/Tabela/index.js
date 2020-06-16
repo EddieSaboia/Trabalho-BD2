@@ -273,7 +273,6 @@ const Tabela = () => {
     let variavelWhere = "";
     let variavelSinal = "";
     let variavelValorWhere = "";
-    console.log("EDDIIIEEE", variavel["length"]);
     if (variavel["length"] === 3 || variavel["length"] === 4) {
       for (let index = 0; index < tamanho; index++) {
         const element = variavel[index];
@@ -315,8 +314,9 @@ const Tabela = () => {
         makeRequest(values, "receberumparametro");
       }
     }
-
+    console.log("EDDIEEEE", variavel["length"])
     if (variavel["length"] === 7) {
+     if(variavel[4] !== ""){
       for (let index = 0; index < tamanho; index++) {
         const element = variavel[index];
         if (
@@ -330,10 +330,7 @@ const Tabela = () => {
       }
 
       variaveis = variavel[1];
-      // 3: "salario"
-      // 4: "<"
-      // 5: ""
-      // 6: "5000
+
       setEle(tabeladatabase);
 
       setElements([
@@ -359,6 +356,47 @@ const Tabela = () => {
       ]);
 
       makeRequest(values, "receberumparametrowhere");
+     }else{
+      for (let index = 0; index < tamanho; index++) {
+        const element = variavel[index];
+        if (
+          element === "departamento" ||
+          element === "dependente" ||
+          element === "empregados"
+        ) {
+          tabeladatabase = element;
+          groups = element;
+        }
+      }
+
+      variaveis = variavel[1];
+
+      setEle(tabeladatabase);
+
+      setElements([
+        {
+          id: "1",
+          data: { label: "Paginas " + tabeladatabase },
+          position: { x: 250, y: 5 },
+        },
+        {
+          id: "3",
+          data: { label: "projeção[" + variaveis + "]" },
+          position: { x: 100, y: 100 },
+        },
+        {
+          id: "2",
+          data: {
+            label: "Where " + variavel[3] + " " + variavel[5] + variavel[6],
+          },
+          position: { x: 100, y: 100 },
+        },
+        { id: "e1-2", source: "1", target: "2", animated: true },
+        { id: "e2-3", source: "2", target: "3", animated: true },
+      ]);
+
+      makeRequest(values, "receberumparametrobinario");
+     }
     }
 
     if (variavel["length"] === 18) {
@@ -470,7 +508,6 @@ const Tabela = () => {
 
       makeRequest(values, "receberdoisparametrowhere");
     }
-
   };
 
   return (
@@ -486,7 +523,7 @@ const Tabela = () => {
           >
             <InputWrapper>
               <FormItem label="Querry" name="numTuplas">
-                <Input />
+                <Input style={{width: 327}}/>
               </FormItem>
             </InputWrapper>
 
@@ -497,7 +534,7 @@ const Tabela = () => {
                   htmlType="submit"
                   style={{ height: 42 }}
                 >
-                  Processar Tabela
+                  Processar
                 </Buttons>
               </Form.Item>
             </ButtonWrapper>
